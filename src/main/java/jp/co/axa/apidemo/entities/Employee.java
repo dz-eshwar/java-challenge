@@ -1,38 +1,30 @@
 package jp.co.axa.apidemo.entities;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
 
+@Data
 @Entity
 @Table(name="EMPLOYEE")
-public class Employee {
+public class Employee implements Serializable {
 
-    @Getter
-    @Setter
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Getter
-    @Setter
     @Column(name="EMPLOYEE_NAME")
     private String name;
 
-    @Getter
-    @Setter
     @Column(name="EMPLOYEE_SALARY")
-    private Integer salary;
+    private Double salary;
 
-    @Getter
-    @Setter
-    @Column(name="DEPARTMENT")
-    private String department;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
 
 }
