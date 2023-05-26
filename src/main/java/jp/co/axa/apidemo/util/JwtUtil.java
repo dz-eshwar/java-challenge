@@ -3,6 +3,7 @@ package jp.co.axa.apidemo.util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jp.co.axa.apidemo.entities.UserInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -53,9 +54,10 @@ public class JwtUtil {
 
 
     //generate token for user
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserInfo userInfo) {
         Map<String, Object> claims = new HashMap<>();
-        return doGenerateToken(claims, userDetails.getUsername());
+        System.out.println(userInfo.getUsername());
+        return doGenerateToken(claims, userInfo.getUsername());
     }
 
 

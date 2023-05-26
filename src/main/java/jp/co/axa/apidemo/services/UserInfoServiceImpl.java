@@ -8,6 +8,7 @@ import jp.co.axa.apidemo.repositories.UserInfoRepository;
 import jp.co.axa.apidemo.util.JwtUtil;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,15 +30,20 @@ public class UserInfoServiceImpl implements UserInfoService {
     public String createUser(String userName, String password) {
         try {
             UserInfo userInfo = new UserInfo();
-            Employee employee = employeeRepository.save(new Employee(new Long(1)));
-            userInfo.setEmployee_id(employee.getId());
+            //Employee employee = employeeRepository.save(new Employee());
+            //userInfo.setEmployee_id(employee.getId());
             userInfo.setUserName(userName);
             userInfo.setPassword(passwordEncoder.encode(password));
             var savedUser = userInfoRepository.save(userInfo);
+            System.out.println(userInfo.getUsername());
+            var savedEmployee = employeeRepository.save(new Employee(savedUser.getEmployee_id()));
             if (savedUser != null) {
-                return jwtUtil.generateToken(userInfo);
+                return jwtUtil.generateToken(savedUser);
             }
-        } catch (Exception ex) {
+        }catch(DataIntegrityViolationException diex){
+            throw new APIAbortedException(HttpStatus.BAD_REQUEST, "user already exists");
+        }
+        catch (Exception ex) {
             ex.printStackTrace();
             throw new APIAbortedException(HttpStatus.BAD_REQUEST, "User not created");
         }

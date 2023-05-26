@@ -3,6 +3,8 @@ package jp.co.axa.apidemo.controller;
 import jp.co.axa.apidemo.entities.Employee;
 import jp.co.axa.apidemo.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +23,7 @@ public class EmployeeController {
         List<Employee> employees = employeeService.retrieveEmployees();
         return ResponseEntity.ok(employees);
     }
-
+    @Cacheable(value = "employees", key = "#id")
     @GetMapping(value = "/employees/{employeeId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getEmployee(@PathVariable(name = "employeeId") Long employeeId) {
         return ResponseEntity.ok(employeeService.getEmployee(employeeId));
@@ -37,7 +39,7 @@ public class EmployeeController {
         employeeService.deleteEmployee(employeeId);
         System.out.println("Employee Deleted Successfully");
     }
-
+    @CacheEvict(value = "employees", key = "#id")
     @PutMapping("/employees/{employeeId}")
     public void updateEmployee(@RequestBody Employee employee,
                                @PathVariable(name = "employeeId") Long employeeId) {
@@ -46,6 +48,11 @@ public class EmployeeController {
             employeeService.updateEmployee(employee);
         }
 
+    }
+
+    @CacheEvict(value = "employees", allEntries = true)
+    public void evictAllEmployees() {
+        // Clear the cache for all employees
     }
 
 }

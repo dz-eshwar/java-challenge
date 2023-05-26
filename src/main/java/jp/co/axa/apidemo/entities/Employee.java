@@ -13,6 +13,7 @@ import java.io.Serializable;
 public class Employee implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name="EMPLOYEE_NAME")

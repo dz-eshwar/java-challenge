@@ -6,9 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
 @Data
@@ -18,9 +16,10 @@ import java.util.Collection;
 public class UserInfo implements Serializable, UserDetails {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long employee_id;
 
-    @Column(name = "userName")
+    @Column(name = "userName",unique = true)
     private String userName;
 
     @Column(name = "password")
@@ -38,7 +37,7 @@ public class UserInfo implements Serializable, UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return this.userName;
     }
 
     @Override
