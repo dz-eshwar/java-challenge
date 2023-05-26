@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface DepartmentService {
     public List<Department> fetchAllDepartments();
+
+    public Department createDepartment(Department department);
 }

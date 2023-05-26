@@ -1,4 +1,4 @@
-package jp.co.axa.apidemo.controllers;
+package jp.co.axa.apidemo.controller;
 
 import jp.co.axa.apidemo.entities.Employee;
 import jp.co.axa.apidemo.services.EmployeeService;
@@ -22,13 +22,13 @@ public class EmployeeController {
         return ResponseEntity.ok(employees);
     }
 
-    @GetMapping("/employees/{employeeId}")
+    @GetMapping(value = "/employees/{employeeId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getEmployee(@PathVariable(name = "employeeId") Long employeeId) {
         return ResponseEntity.ok(employeeService.getEmployee(employeeId));
     }
 
-    @PostMapping("/employees")
-    public ResponseEntity saveEmployee(Employee employee) {
+    @PostMapping(value = "/employees", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity saveEmployee(@RequestBody Employee employee) {
         return ResponseEntity.ok(employeeService.saveEmployee(employee));
     }
 

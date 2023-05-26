@@ -1,8 +1,7 @@
 package jp.co.axa.apidemo.entities;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,10 +9,10 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name="EMPLOYEE")
+@NoArgsConstructor
 public class Employee implements Serializable {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     @Column(name="EMPLOYEE_NAME")
@@ -27,4 +26,7 @@ public class Employee implements Serializable {
     @JoinColumn(name = "department_id")
     private Department department;
 
+    public Employee(Long id) {
+        this.id = id;
+    }
 }
