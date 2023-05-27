@@ -1,52 +1,16 @@
-### How to use this spring-boot project
-
-- Install packages with `mvn package`
-- Run `mvn spring-boot:run` for starting the application (or use your IDE)
-
-Application (with the embedded H2 database) is ready to be used ! You can access the url below for testing it :
-
-- Swagger UI : http://localhost:8080/swagger-ui.html
-- H2 UI : http://localhost:8080/h2-console
-
-> Don't forget to set the `JDBC URL` value as `jdbc:h2:mem:testdb` for H2 UI.
-
-
-
-### Instructions
-
-- download the zip file of this project
-- create a repository in your own github named 'java-challenge'
-- clone your repository in a folder on your machine
-- extract the zip file in this folder
-- commit and push
-
-- Enhance the code in any ways you can see, you are free! Some possibilities:
-  - Add tests
-  - Change syntax
-  - Protect controller end points
-  - Add caching logic for database calls
-  - Improve doc and comments
-  - Fix any bug you might find
-- Edit readme.md and add any comments. It can be about what you did, what you would have done if you had more time, etc.
-- Send us the link of your repository.
-
-#### Restrictions
-- use java 8
-
-
-#### What we will look for
-- Readability of your code
-- Documentation
-- Comments in your code 
-- Appropriate usage of spring boot
-- Appropriate usage of packages
-- Is the application running as expected
-- No performance issues
-
+###Implementations
+1. Implemented JWT token based authentication for APIs. Only the apis that has "/api/v1/user" are non-authenticated. All other APIs need token to access
+2. On successful user creation and user login, a valid token is responded to user.
+3. Implemented Caffeine caching to cache getEmployee method calls to reduce the database calls to fetch id based employee data.
+4. Added swagger documentation annotation to controller classes and entity classes.
+5. Implemented JUnit test cases achieving 94% test coverage in class level. Can improve more on method level and liine level.
+6. Took the liberty to create a department entity and database table to handle entity relation between employee and department. 
 #### Your experience in Java
 
 Please let us know more about your Java experience in a few sentences. For example:
 
-- I have 3 years experience in Java and I started to use Spring Boot from last year
-- I'm a beginner and just recently learned Spring Boot
-- I know Spring Boot very well and have been using it for many years
+- I have 8 years experience in Java and SpringBoot.
+- I have worked across different domains and teams. I am both team player and individual contributor.
+- I enjoy handling teams and managing my team in the journey towards accomplishing 100 % completion of tasks with efficient code and within the time lines
+- ALthough I carry main strength in Java+spring boot , am ready to adapt myself to new challenges and technologies
+- I have also worked on AWS
