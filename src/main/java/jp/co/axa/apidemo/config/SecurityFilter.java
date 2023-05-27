@@ -3,6 +3,7 @@ package jp.co.axa.apidemo.config;
 
 import jp.co.axa.apidemo.services.UserInfoServiceImpl;
 import jp.co.axa.apidemo.util.JwtUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
@@ -31,17 +33,17 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String header = fetchHeader(request);
-        System.out.println(header);
+        log.debug(header);
         if(StringUtils.isBlank(header)||!header.startsWith("Bearer ")){
             filterChain.doFilter(request,response);
             return;
         }
         else{
             String token = fetchToken(header);
-            System.out.println(token);
+            log.debug(token);
             if(StringUtils.isNotBlank(token)){
                 String userName = fetchUserName(token);
-                System.out.println(userName);
+                log.debug(userName);
                 if(StringUtils.isNotBlank(userName) &&
                         SecurityContextHolder.getContext().getAuthentication() == null){
                     UserDetails userDetails = userService.loadUserByUsername(userName);

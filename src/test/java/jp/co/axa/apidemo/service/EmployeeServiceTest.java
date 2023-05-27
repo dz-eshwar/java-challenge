@@ -2,6 +2,7 @@ package jp.co.axa.apidemo.service;
 
 import jp.co.axa.apidemo.entities.Department;
 import jp.co.axa.apidemo.entities.Employee;
+import jp.co.axa.apidemo.exception.UserNotFoundException;
 import jp.co.axa.apidemo.repositories.EmployeeRepository;
 import jp.co.axa.apidemo.services.EmployeeServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -10,12 +11,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTest {
@@ -34,8 +37,8 @@ public class EmployeeServiceTest {
         employees.add(new Employee());
 
         Mockito.when(employeeRepository.findAll()).thenReturn(employees);
-        List<Employee> fetchedEmployeeList = employeeRepository.findAll();
-        assertEquals(3,fetchedEmployeeList.size());
+        List<Employee> fetchedEmployeeList = employeeService.retrieveEmployees();
+        assertEquals(3, fetchedEmployeeList.size());
     }
 
     @Test
@@ -44,14 +47,22 @@ public class EmployeeServiceTest {
         employee.setId(Long.valueOf("1"));
         employee.setName("Test");
         employee.setSalary(Double.valueOf("80000.00"));
-        Department department = new Department(Long.valueOf("1"),"Test");
+        Department department = new Department(Long.valueOf("1"), "Test");
         employee.setDepartment(department);
 
         Mockito.when(employeeRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(employee));
 
         Optional<Employee> fetchedEmployee = employeeRepository.findById(Long.valueOf("1"));
 
-        assertEquals("Test",fetchedEmployee.get().getName());
+        assertEquals("Test", fetchedEmployee.get().getName());
+    }
+
+    @Test
+    void test_getEmployee_throws_UserNotFoundException(){
+        Mockito.when(employeeRepository.findById(Mockito.anyLong())).thenThrow(new UserNotFoundException(HttpStatus.NOT_FOUND,"user not found"));
+        assertThrows(UserNotFoundException.class,()->{
+            employeeService.getEmployee(new Long(1));
+        });
     }
 
     @Test
@@ -60,12 +71,12 @@ public class EmployeeServiceTest {
         employee.setId(Long.valueOf("1"));
         employee.setName("Test");
         employee.setSalary(Double.valueOf("80000.00"));
-        Department department = new Department(Long.valueOf("1"),"Test");
+        Department department = new Department(Long.valueOf("1"), "Test");
         employee.setDepartment(department);
 
         Mockito.when(employeeRepository.save(Mockito.any())).thenReturn(employee);
 
-        Employee savedEmployee= employeeRepository.save(new Employee());
+        Employee savedEmployee = employeeService.saveEmployee(new Employee());
         assertEquals(Integer.toUnsignedLong(1), Optional.ofNullable(savedEmployee.getId()).get().longValue());
     }
 
@@ -76,6 +87,16 @@ public class EmployeeServiceTest {
 
     @Test
     void updateEmployeeTest() {
+        Employee employee = new Employee();
+        employee.setId(Long.valueOf("1"));
+        employee.setName("Test");
+        employee.setSalary(Double.valueOf("80000.00"));
+        Department department = new Department(Long.valueOf("1"), "Test");
+        employee.setDepartment(department);
 
+        Mockito.when(employeeRepository.save(Mockito.any())).thenReturn(employee);
+
+        Employee savedEmployee = employeeService.updateEmployee(new Employee());
+        assertEquals(Integer.toUnsignedLong(1), Optional.ofNullable(savedEmployee.getId()).get().longValue());
     }
 }
