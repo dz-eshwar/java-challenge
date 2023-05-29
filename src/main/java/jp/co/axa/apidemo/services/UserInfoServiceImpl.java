@@ -34,6 +34,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             UserInfo userInfo = new UserInfo();
             userInfo.setUserName(userName);
             userInfo.setPassword(passwordEncoder.encode(password));
+            userInfo.setTokenExpired(Boolean.FALSE);
             var savedUser = userInfoRepository.save(userInfo);
             var savedEmployee = employeeRepository.save(new Employee(savedUser.getEmployee_id()));
             if (savedUser != null&& savedUser.getEmployee_id()!=null) {
@@ -50,10 +51,33 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     public String login(String username, String password) {
         UserInfo userinfo = loadUserByUsername(username);
-        if (userinfo != null && StringUtils.isBlank(userinfo.getUsername())) {
-            throw new UserNotFoundException(HttpStatus.NOT_FOUND, "User not found or invalid credentials submitted");
-        }
+
+        if (userinfo != null) {
+            //tokenExpired = true mean that user is already logged out
+            if(userinfo.getTokenExpired().booleanValue()==Boolean.TRUE){
+                userinfo.setTokenExpired(Boolean.FALSE);
+                userInfoRepository.save(userinfo);
+            }
+            else{
+                throw new APIAbortedException(HttpStatus.BAD_REQUEST,"user already logged in");
+            }
+            if(StringUtils.isBlank(userinfo.getUsername())) {
+                throw new UserNotFoundException(HttpStatus.NOT_FOUND, "User not found or invalid credentials submitted");
+            }
+
         return jwtUtil.generateToken(userinfo);
+        }
+        return "";
+    }
+
+    public void logout(String username, String password){
+        UserInfo userInfo = loadUserByUsername(username);
+        if(userInfo == null){
+            throw new UserNotFoundException(HttpStatus.NOT_FOUND,"user not found");
+        }
+        userInfo.setTokenExpired(Boolean.TRUE);
+
+        userInfoRepository.save(userInfo);
     }
 
     @Override

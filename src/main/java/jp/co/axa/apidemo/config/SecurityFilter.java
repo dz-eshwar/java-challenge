@@ -1,14 +1,16 @@
 package jp.co.axa.apidemo.config;
 
 
+import jp.co.axa.apidemo.entities.UserInfo;
+import jp.co.axa.apidemo.exception.APIAbortedException;
 import jp.co.axa.apidemo.services.UserInfoServiceImpl;
 import jp.co.axa.apidemo.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -46,8 +48,10 @@ public class SecurityFilter extends OncePerRequestFilter {
                 log.debug(userName);
                 if(StringUtils.isNotBlank(userName) &&
                         SecurityContextHolder.getContext().getAuthentication() == null){
-                    UserDetails userDetails = userService.loadUserByUsername(userName);
-
+                    UserInfo userDetails = userService.loadUserByUsername(userName);
+                    if(userDetails.getTokenExpired()==Boolean.TRUE){
+                        throw new APIAbortedException(HttpStatus.BAD_REQUEST,"user logged out please login");
+                    }
                     if(jwtUtil.validateToken(token,userDetails)){
                         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                                 new UsernamePasswordAuthenticationToken(userDetails,null, userDetails.getAuthorities());

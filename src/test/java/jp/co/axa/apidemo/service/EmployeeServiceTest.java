@@ -87,16 +87,20 @@ public class EmployeeServiceTest {
 
     @Test
     void updateEmployeeTest() {
-        Employee employee = new Employee();
-        employee.setId(Long.valueOf("1"));
-        employee.setName("Test");
-        employee.setSalary(Double.valueOf("80000.00"));
+        Employee existingEmployee = new Employee();
+        existingEmployee.setId(Long.valueOf("1"));
+        existingEmployee.setName("Test");
+        existingEmployee.setSalary(Double.valueOf("80000.00"));
         Department department = new Department(Long.valueOf("1"), "Test");
-        employee.setDepartment(department);
+        existingEmployee.setDepartment(department);
 
-        Mockito.when(employeeRepository.save(Mockito.any())).thenReturn(employee);
+        Mockito.when(employeeRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(existingEmployee));
+        existingEmployee.setName("TestNew");
+        Mockito.when(employeeRepository.save(Mockito.any(Employee.class))).thenReturn(existingEmployee);
 
-        Employee savedEmployee = employeeService.updateEmployee(new Employee());
-        assertEquals(Integer.toUnsignedLong(1), Optional.ofNullable(savedEmployee.getId()).get().longValue());
+        Employee emp = employeeService.updateEmployee(existingEmployee);
+
+        assertEquals(Long.valueOf(1),emp.getId());
+        assertEquals("TestNew",emp.getName());
     }
 }

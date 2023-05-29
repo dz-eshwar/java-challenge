@@ -62,21 +62,19 @@ public class EmployeeController {
     public ResponseEntity saveEmployee(@RequestBody Employee employee) {
         return ResponseEntity.ok(employeeService.saveEmployee(employee));
     }
+
     @ApiOperation(value = "delete employees info REST API")
     @DeleteMapping("/employees/{employeeId}")
     public void deleteEmployee(@PathVariable(name = "employeeId") Long employeeId) {
         employeeService.deleteEmployee(employeeId);
         System.out.println("Employee Deleted Successfully");
     }
+
     @ApiOperation(value = "update employees info REST API")
     @CacheEvict(value = "employees", key = "#id")
-    @PutMapping("/employees/{employeeId}")
-    public void updateEmployee(@RequestBody Employee employee,
-                               @PathVariable(name = "employeeId") Long employeeId) {
-        Employee emp = employeeService.getEmployee(employeeId);
-        if (emp != null) {
-            employeeService.updateEmployee(employee);
-        }
+    @PutMapping("/employees")
+    public ResponseEntity updateEmployee(@RequestBody Employee employee) {
+        return ResponseEntity.ok(employeeService.updateEmployee(employee));
 
     }
 

@@ -44,7 +44,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         log.error(EXCEPTION_DETAILS,exception);
         Map<String,String> messageMap = new HashMap<>();
         messageMap.put("code", "ERR404");
-        messageMap.put("message",exception.getMessage());
+        messageMap.put("message",exception.getErrorMessage());
         return new ResponseEntity(messageMap, exception.getHttpStatus());
     }
 

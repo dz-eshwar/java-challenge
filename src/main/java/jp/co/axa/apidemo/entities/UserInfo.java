@@ -31,6 +31,10 @@ public class UserInfo implements Serializable, UserDetails {
     @ApiModelProperty(value = "password provided by the user")
     private String password;
 
+    @Column(name = "token_expired")
+    @ApiModelProperty(value = "password provided by the user")
+    private Boolean tokenExpired;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

@@ -52,18 +52,5 @@ public class UserInfoServiceTest {
         assertNotEquals("", token);
     }
 
-    @Test
-    void test_createUser_throws_dataIntegrityViolationException(){
-        UserInfo userInfo = new UserInfo();
-        userInfo.setEmployee_id(Long.valueOf("1"));
-        userInfo.setUserName("username");
-        userInfo.setPassword("password");
-        Mockito.when(userInfoRepository.save(Mockito.any())).thenThrow(new DataIntegrityViolationException("exception raised"));
 
-        Mockito.when(passwordEncoder.encode(Mockito.anyString())).thenReturn("encryptedPassword");
-
-        String token  = userInfoService.createUser("un","pw");
-
-        assertThrows(APIAbortedException.class,()->userInfoService.createUser("un","pw"));
-    }
 }

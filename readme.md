@@ -5,6 +5,14 @@
 4. Added swagger documentation annotation to controller classes and entity classes.
 5. Implemented JUnit test cases achieving 94% test coverage in class level. Can improve more on method level and liine level.
 6. Took the liberty to create a department entity and database table to handle entity relation between employee and department. 
+
+###How to test the application
+1. create departments using /api/v1/department/createDept api
+2. create user using /api/v1/user/signup api
+3. update user using /api/v1/employees - PUT method
+4. we can get all employees using /api/v1/employees
+5. logout using /api/v1/user/logout
+
 #### Your experience in Java
 
 Please let us know more about your Java experience in a few sentences. For example:

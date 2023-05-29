@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class EmployeeServiceImpl implements EmployeeService{
+public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -26,13 +26,13 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Cacheable(value = "employees", key = "#id")
     public Employee getEmployee(Long employeeId) {
         Optional<Employee> optEmp = employeeRepository.findById(employeeId);
-        if(!optEmp.isPresent()){
-            throw new UserNotFoundException(HttpStatus.NOT_FOUND,"User not found");
+        if (!optEmp.isPresent()) {
+            throw new UserNotFoundException(HttpStatus.NOT_FOUND, "User not found");
         }
         return optEmp.get();
     }
 
-    public Employee saveEmployee(Employee employee){
+    public Employee saveEmployee(Employee employee) {
         return employeeRepository.save(employee);
     }
 
@@ -42,11 +42,17 @@ public class EmployeeServiceImpl implements EmployeeService{
         return employeeRepository.findById(id).orElse(null);
     }
 
-    public void deleteEmployee(Long employeeId){
+    public void deleteEmployee(Long employeeId) {
         employeeRepository.deleteById(employeeId);
     }
 
     public Employee updateEmployee(Employee employee) {
-       return employeeRepository.save(employee);
+        Optional<Employee> emp = employeeRepository.findById(employee.getId());
+        if (emp.isPresent()) {
+            Employee updatedEmployee = employeeRepository.save(employee);
+            return updatedEmployee;
+        } else {
+            throw new UserNotFoundException(HttpStatus.OK, "user not found");
+        }
     }
 }
